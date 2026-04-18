@@ -19,9 +19,8 @@ jobs:
         run: npm install -g @tauri-apps/cli
 
       - name: Build Application
-        # On initialise Tauri et on compile en une seule fois
         run: |
-          tauri init --app-name "MonApp" --window-title "Mon Application Legere" --dist-dir "../dist" --dev-path "../dist" --yes
+          tauri init --app-name "MonApp" --window-title "Mon App" --frontend-dist "../dist" --before-dev-command "" --before-build-command "" --ci --yes
           tauri build
         
       - name: Upload EXE
