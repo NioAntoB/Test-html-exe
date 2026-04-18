@@ -1,4 +1,4 @@
-name: Build-Tauri-Final
+name: Build-Tauri-2026
 on: [push]
 
 jobs:
@@ -10,25 +10,22 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # On utilise une version stable et récente
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Tauri CLI
-        run: npm install -g @tauri-apps/cli
-
-      - name: Force Build
+      - name: Create App
         shell: bash
         run: |
-          # 1. On crée un dossier pour la config si tauri est têtu
-          mkdir -p src-tauri
+          # On installe l'outil Tauri localement pour éviter les conflits
+          npm install @tauri-apps/cli @tauri-apps/api
           
-          # 2. On lance l'initialisation avec les nouveaux paramètres 2026
-          tauri init --app-name "MonApp" --window-title "Mon App" --frontend-dist "../dist" --before-dev-command "" --before-build-command "" --ci --yes
+          # On force l'initialisation SANS dossier src-tauri préalable
+          npx tauri init --app-name "MonApp" --window-title "Mon App" --frontend-dist "../dist" --ci --yes
           
-          # 3. On lance la construction
-          tauri build
+          # On lance la compilation
+          npx tauri build
         
       - name: Upload EXE
         uses: actions/upload-artifact@v4
