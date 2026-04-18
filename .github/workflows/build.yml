@@ -1,14 +1,14 @@
-name: Build-Tauri-Ultra-Light
+name: Build-Tauri-Final
 on: [push]
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -18,13 +18,20 @@ jobs:
       - name: Install Tauri CLI
         run: npm install -g @tauri-apps/cli
 
-      - name: Build Application
+      - name: Force Build
+        shell: bash
         run: |
+          # 1. On crée un dossier pour la config si tauri est têtu
+          mkdir -p src-tauri
+          
+          # 2. On lance l'initialisation avec les nouveaux paramètres 2026
           tauri init --app-name "MonApp" --window-title "Mon App" --frontend-dist "../dist" --before-dev-command "" --before-build-command "" --ci --yes
+          
+          # 3. On lance la construction
           tauri build
         
       - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
-          name: Logiciel-Poids-Plume
+          name: Mon-Logiciel-Mini
           path: src-tauri/target/release/MonApp.exe
